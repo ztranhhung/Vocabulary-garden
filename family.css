@@ -1,11 +1,13 @@
-/* Vocabulary Garden 02 — precise hero layout overrides */
+
+/* VOCABULARY GARDEN - HERO ART FIX */
+
 .hero {
   grid-template-columns: minmax(0, 1.12fr) minmax(300px, 1fr) minmax(300px, 1fr);
   gap: 24px;
   align-items: center;
 }
 
-/* Show the entire garden illustration, including every line of text. */
+/* Garden illustration */
 .hero .hero-family {
   width: 100%;
   max-width: 340px;
@@ -20,6 +22,7 @@
   box-shadow: 0 12px 30px rgba(50,65,43,.13);
   transform: rotate(-1deg);
 }
+
 .hero .hero-family img {
   display: block;
   width: 100%;
@@ -29,37 +32,46 @@
   border-radius: 10px;
 }
 
-/* Give each vocabulary card its own space: no overlap over the cat's face. */
+/* Diagonal vocabulary cards */
 .hero .hero-art {
   position: relative;
   width: 100%;
   min-width: 0;
-  height: 330px;
+  height: 350px;
   overflow: visible;
 }
+
 .hero .hero-art .hero-tile {
   box-sizing: border-box;
-  transform: none;
+  transform-origin: center center;
 }
+
+/* Cat: larger card, upper left */
 .hero .hero-art .tile-one {
-  width: 166px;
+  width: 205px;
   left: 0;
   right: auto;
-  top: 55px;
+  top: 28px;
   z-index: 2;
+  transform: rotate(-8deg) !important;
 }
+
+/* Chick: smaller card, lower right, overlapping slightly */
 .hero .hero-art .tile-two {
-  width: 145px;
+  width: 178px;
   left: auto;
   right: 0;
   top: 105px;
-  z-index: 1;
+  z-index: 3;
+  transform: rotate(9deg) !important;
 }
+
 .hero .hero-art .art-doodle {
   right: 4px;
   top: 10px;
   font-size: 15px;
 }
+
 .hero .hero-art .art-caption {
   left: 10px;
   bottom: 2px;
@@ -70,16 +82,18 @@
     grid-template-columns: minmax(0, 1fr) minmax(280px, .95fr);
     gap: 22px;
   }
+
   .hero .hero-family {
     max-width: 340px;
     grid-column: 1;
     grid-row: 2;
   }
+
   .hero .hero-art {
     grid-column: 2;
     grid-row: 1 / span 2;
     width: 100%;
-    max-width: 340px;
+    max-width: 390px;
     justify-self: center;
   }
 }
@@ -89,28 +103,34 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
   }
+
   .hero .hero-family {
     grid-column: 1;
     grid-row: auto;
     max-width: 340px;
     margin: 4px auto;
   }
+
   .hero .hero-art {
     grid-column: 1;
     grid-row: auto;
     width: 100%;
-    max-width: 340px;
-    height: 300px;
+    max-width: 390px;
+    height: 320px;
     margin: 0 auto;
   }
+
   .hero .hero-art .tile-one {
-    width: 158px;
-    left: 0;
-    top: 48px;
+    width: 190px;
+    left: 4px;
+    top: 32px;
+    transform: rotate(-8deg) !important;
   }
+
   .hero .hero-art .tile-two {
-    width: 136px;
-    right: 0;
+    width: 164px;
+    right: 4px;
     top: 105px;
+    transform: rotate(9deg) !important;
   }
 }
