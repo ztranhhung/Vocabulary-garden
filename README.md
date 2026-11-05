@@ -7,3 +7,4 @@ Bản này giữ nguyên dữ liệu, giao diện và chức năng học từ v�
 - Nếu thiết bị không có giọng ưu tiên, tự động dùng giọng en-US tốt nhất hiện có.
 
 Lưu ý: giọng thực tế phụ thuộc các voice được cài/được trình duyệt cung cấp trên thiết bị. Microsoft Edge thường có thêm giọng trực tuyến tự nhiên; hãy thử mở bằng Edge nếu Chrome vẫn đọc bằng giọng máy cũ.
+Redeploy after adding OpenAI API key
