@@ -12,7 +12,7 @@
 </head><body><header class="site-header"><a class="brand" href="/"><span class="brand-icon">v.</span> vườn từ vựng<span class="brand-dot">•</span></a><nav><a href="#setup">Luyện tập</a><a href="#library">Thư viện từ</a><a href="#progress">Tiến độ</a></nav><span class="header-note">Một chút mỗi ngày, nhớ lâu hơn.</span></header><div class="wrap"><main class="panel">
 <section class="hero"><div class="hero-copy"><div class="eyebrow"><span></span> GÓC HỌC TIẾNG ANH CỦA BẠN</div>
 <h1>Mỗi từ mới,<br>một thế giới nhỏ.</h1><p class="sub">Nhìn tranh, nghe tiếng Anh, ghi nhớ tự nhiên. Cùng khám phá khu vườn từ vựng của bạn mỗi ngày.</p>
-<div class="hero-facts"><span id="bankCount">414 từ vựng</span><i></i><span>9 chủ đề</span><i></i><span>Minh họa AI</span></div></div><div class="hero-family"><img src="/img/family.jpg" alt="Ảnh gia đình"></div><div class="hero-art"><div class="art-doodle">hello, little world!</div><div class="hero-tile tile-one"><img src="/img/word-0.webp" alt="Mèo — Cat"><span>cat <small>/kæt/</small></span></div><div class="hero-tile tile-two"><img src="/img/word-1.webp" alt="Gà con — Chick"><span>chick <small>/tʃɪk/</small></span></div><span class="art-caption">Nhìn một lần · Nhớ một từ</span></div></section><div id="setup"><section class="practice"><div class="section-intro"><div><span class="eyebrow">01 / LUYỆN TẬP</span><h2>Sẵn sàng gieo một từ mới?</h2><p>Chọn cách học phù hợp với bạn hôm nay.</p></div><span class="little-label">5 phút cũng là một khởi đầu</span></div>
+<div class="hero-facts"><span id="bankCount">414 từ vựng</span><i></i><span id="topicCount">9 chủ đề</span><i></i><span>Minh họa AI</span></div></div><div class="hero-family"><img src="/img/family.jpg" alt="Ảnh gia đình"></div><div class="hero-art"><div class="art-doodle">hello, little world!</div><div class="hero-tile tile-one"><img src="/img/word-0.webp" alt="Mèo — Cat"><span>cat <small>/kæt/</small></span></div><div class="hero-tile tile-two"><img src="/img/word-1.webp" alt="Gà con — Chick"><span>chick <small>/tʃɪk/</small></span></div><span class="art-caption">Nhìn một lần · Nhớ một từ</span></div></section><div id="setup"><section class="practice"><div class="section-intro"><div><span class="eyebrow">01 / LUYỆN TẬP</span><h2>Sẵn sàng gieo một từ mới?</h2><p>Chọn cách học phù hợp với bạn hôm nay.</p></div><span class="little-label">5 phút cũng là một khởi đầu</span></div>
 <div class="controls" style="align-items:center"><label for="mode" style="font-weight:700">Chọn cách luyện:</label><select id="mode"><option value="random"> Ngẫu nhiên – trộn tất cả chủ đề</option><option value="topic"> Theo chủ đề</option></select></div>
 <div class="controls" id="topicPicker" style="align-items:center;display:none"><label for="category" style="font-weight:700">Chọn chủ đề:</label><select id="category"></select></div>
 <div class="controls" style="align-items:center"><label for="questionCount" style="font-weight:700">Số câu mỗi lượt:</label><select id="questionCount"><option value="5">5 câu</option><option value="10">10 câu</option><option value="20" selected>20 câu</option><option value="30">30 câu</option><option value="40">40 câu</option><option value="50">50 câu</option></select></div>
@@ -105,6 +105,37 @@ function retryWrong(){if(!lastMissed.length)return;resetClock();questions=shuffl
 if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speechSynthesis.addEventListener?.('voiceschanged',()=>window.speechSynthesis.getVoices());}
 window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('homeResult').onclick=goHome;$('back').onclick=goBack;$('next').onclick=()=>{if(index<questions.length-1){index++;render()}else finish()};$('again').onclick=()=>{ $('setup').classList.remove('hidden'); $('result').classList.add('hidden'); $('quiz').classList.add('hidden'); };$('retryWrong').onclick=retryWrong;$('speakAgain').onclick=()=>speak(questions[index].en);$('continueBtn').onclick=()=>{ $('result').classList.add('hidden');$('quiz').classList.add('hidden');$('setup').classList.remove('hidden');renderStats();};$('resetStats').onclick=()=>{if(confirm('Bạn có chắc muốn xóa toàn bộ thống kê học tập?')){saveQueue=saveQueue.then(()=>syncProgress('DELETE')).catch(()=>{$('saveStatus').textContent='Chưa thể đặt lại thống kê. Vui lòng thử lại.'});}};$('questionCount').addEventListener('change',()=>{$('start').textContent='Bắt đầu luyện '+$('questionCount').value+' câu';});renderStats();
 </script><script src="/library.js"></script>
+<script>
+// Bổ sung các từ do quản trị viên thêm trong Cloudflare D1.
+// Nếu API tạm thời không khả dụng, 414 từ gốc vẫn hoạt động bình thường.
+(async()=>{
+ try{
+  const response=await fetch('/api/words',{cache:'no-store'});
+  if(!response.ok) return;
+  const data=await response.json();
+  const existing=new Set(unique.map(w=>w.en.trim().toLocaleLowerCase('en')));
+  (data.words||[]).forEach(w=>{
+   const key=String(w.en||'').trim().toLocaleLowerCase('en');
+   if(!key||existing.has(key)) return;
+   existing.add(key);
+   unique.push({en:w.en,vi:w.vi,category:w.category,image_url:w.image_url||'',ipa:w.ipa||''});
+  });
+  const allCats=[...new Set(unique.map(w=>w.category))];
+  allCats.forEach(c=>{
+   if(!categories.includes(c)){
+    categories.push(c);
+    const a=document.createElement('option');a.value=c;a.textContent=c;categorySelect.appendChild(a);
+    const b=document.createElement('option');b.value=c;b.textContent=c;libraryCategory.appendChild(b);
+   }
+  });
+  document.getElementById('bankCount').textContent=unique.length+' từ vựng';
+  document.getElementById('topicCount').textContent=categories.length+' chủ đề';
+  renderLibrary();
+  renderStats();
+ }catch(error){console.warn('Không tải được từ bổ sung từ D1; tiếp tục dùng kho từ gốc.',error);}
+})();
+</script>
+
 <button class="garden-audio-control" id="gardenAudioToggle" type="button" aria-pressed="false" aria-label="Bật nhạc nền khu vườn">
   <span class="garden-audio-icon" aria-hidden="true">♫</span>
   <span><span id="gardenAudioLabel">Bật nhạc khu vườn</span><br><span class="garden-audio-state" id="gardenAudioState">A Rest at the Steamy Inn</span></span>
