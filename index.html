@@ -1,8 +1,18 @@
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vườn Từ Vựng · Học tiếng Anh qua hình ảnh</title><meta name="description" content="Khám phá từ vựng tiếng Anh qua tranh AI, nghe phát âm và luyện quiz theo 9 chủ đề."><meta property="og:site_name" content="Vườn Từ Vựng"><meta property="og:title" content="Vườn Từ Vựng · Học tiếng Anh qua hình ảnh"><meta property="og:description" content="Mỗi từ là một bức tranh. Học tiếng Anh với hình minh họa AI, phát âm và quiz theo chủ đề.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css"></head><body><header class="site-header"><a class="brand" href="/"><span class="brand-icon">v.</span> vườn từ vựng<span class="brand-dot">•</span></a><nav><a href="#setup">Luyện tập</a><a href="#library">Thư viện từ</a><a href="#progress">Tiến độ</a></nav><span class="header-note">Một chút mỗi ngày, nhớ lâu hơn.</span></header><div class="wrap"><main class="panel">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css">
+<style>
+/* Vocabulary Garden 02 — ambient music control */
+.garden-audio-control{position:fixed;right:22px;bottom:20px;z-index:9999;display:flex;align-items:center;gap:10px;padding:11px 16px;border:1px solid rgba(87,128,94,.25);border-radius:999px;background:rgba(255,255,255,.94);color:#315b3b;box-shadow:0 8px 28px rgba(38,75,48,.16);font:600 13px/1.2 inherit;backdrop-filter:blur(10px);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.garden-audio-control:hover{transform:translateY(-2px);box-shadow:0 11px 30px rgba(38,75,48,.2)}
+.garden-audio-control:focus-visible{outline:3px solid #83b88c;outline-offset:3px}
+.garden-audio-icon{font-size:18px;line-height:1}
+.garden-audio-state{font-size:11px;font-weight:500;opacity:.72}
+@media(max-width:600px){.garden-audio-control{right:12px;bottom:12px;padding:10px 13px}.garden-audio-state{display:none}}
+</style>
+</head><body><header class="site-header"><a class="brand" href="/"><span class="brand-icon">v.</span> vườn từ vựng<span class="brand-dot">•</span></a><nav><a href="#setup">Luyện tập</a><a href="#library">Thư viện từ</a><a href="#progress">Tiến độ</a></nav><span class="header-note">Một chút mỗi ngày, nhớ lâu hơn.</span></header><div class="wrap"><main class="panel">
 <section class="hero"><div class="hero-copy"><div class="eyebrow"><span></span> GÓC HỌC TIẾNG ANH CỦA BẠN</div>
 <h1>Mỗi từ mới,<br>một thế giới nhỏ.</h1><p class="sub">Nhìn tranh, nghe tiếng Anh, ghi nhớ tự nhiên. Cùng khám phá khu vườn từ vựng của bạn mỗi ngày.</p>
-<div class="hero-facts"><span id="bankCount">414 từ vựng</span><i></i><span>9 chủ đề</span><i></i><span>Minh họa AI</span></div></div><div class="hero-art"><div class="art-doodle">hello, little world!</div><div class="hero-tile tile-one"><img src="./img/word-0.webp" alt="Mèo — Cat"><span>cat <small>/kæt/</small></span></div><div class="hero-tile tile-two"><img src="./img/word-1.webp" alt="Gà con — Chick"><span>chick <small>/tʃɪk/</small></span></div><span class="art-caption">Nhìn một lần · Nhớ một từ</span></div></section><div id="setup"><section class="practice"><div class="section-intro"><div><span class="eyebrow">01 / LUYỆN TẬP</span><h2>Sẵn sàng gieo một từ mới?</h2><p>Chọn cách học phù hợp với bạn hôm nay.</p></div><span class="little-label">5 phút cũng là một khởi đầu</span></div>
+<div class="hero-facts"><span id="bankCount">414 từ vựng</span><i></i><span>9 chủ đề</span><i></i><span>Minh họa AI</span></div></div><div class="hero-art"><div class="art-doodle">hello, little world!</div><div class="hero-tile tile-one"><img src="/img/word-0.webp" alt="Mèo — Cat"><span>cat <small>/kæt/</small></span></div><div class="hero-tile tile-two"><img src="/img/word-1.webp" alt="Gà con — Chick"><span>chick <small>/tʃɪk/</small></span></div><span class="art-caption">Nhìn một lần · Nhớ một từ</span></div></section><div id="setup"><section class="practice"><div class="section-intro"><div><span class="eyebrow">01 / LUYỆN TẬP</span><h2>Sẵn sàng gieo một từ mới?</h2><p>Chọn cách học phù hợp với bạn hôm nay.</p></div><span class="little-label">5 phút cũng là một khởi đầu</span></div>
 <div class="controls" style="align-items:center"><label for="mode" style="font-weight:700">Chọn cách luyện:</label><select id="mode"><option value="random"> Ngẫu nhiên – trộn tất cả chủ đề</option><option value="topic"> Theo chủ đề</option></select></div>
 <div class="controls" id="topicPicker" style="align-items:center;display:none"><label for="category" style="font-weight:700">Chọn chủ đề:</label><select id="category"></select></div>
 <div class="controls" style="align-items:center"><label for="questionCount" style="font-weight:700">Số câu mỗi lượt:</label><select id="questionCount"><option value="5">5 câu</option><option value="10">10 câu</option><option value="20" selected>20 câu</option><option value="30">30 câu</option><option value="40">40 câu</option><option value="50">50 câu</option></select></div>
@@ -54,29 +64,7 @@ $('topicStats').innerHTML='<table style="width:100%;border-collapse:collapse;fon
 function renderSessionStats(){const counts={};questions.forEach(q=>{if(responses[questions.indexOf(q)])counts[q.category]=(counts[q.category]||0)+1});$('sessionStats').innerHTML='<h3> Thống kê lượt vừa hoàn thành</h3><p>Thời gian: <b>'+String(Math.floor(elapsedSeconds/60)).padStart(2,'0')+':'+String(elapsedSeconds%60).padStart(2,'0')+'</b> · Số từ đã làm: <b>'+questions.length+'</b></p><table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr style="text-align:left;color:var(--muted)"><th style="padding:7px 3px">Chủ đề</th><th style="padding:7px 3px;text-align:right">Số từ lượt này</th></tr></thead><tbody>'+categories.filter(c=>counts[c]).map(c=>`<tr style="border-top:1px solid var(--line)"><td style="padding:7px 3px">${c}</td><td style="padding:7px 3px;text-align:right">${counts[c]}</td></tr>`).join('')+'</tbody></table><h3> Tổng tiến độ sau lượt này</h3><p>'+$('overallStats').textContent+'</p>';}
 
 function shuffle(a){const result=[...a];for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}return result}
-function pickEnglishVoice(){
- const voices=window.speechSynthesis.getVoices();
- const enUS=voices.filter(v=>/^en-US/i.test(v.lang));
- const preferred=[
-  /Google US English/i,
-  /Microsoft Aria Online.*Natural/i,
-  /Microsoft Jenny Online.*Natural/i,
-  /Microsoft Ava Online.*Natural/i,
-  /Microsoft Emma Online.*Natural/i,
-  /Microsoft Guy Online.*Natural/i,
-  /Aria/i,/Jenny/i,/Ava/i,/Emma/i,/Samantha/i,/Alex/i
- ];
- for(const pattern of preferred){const match=enUS.find(v=>pattern.test(v.name));if(match)return match;}
- return enUS.find(v=>/natural|enhanced|online/i.test(v.name))||enUS[0]||voices.find(v=>/^en/i.test(v.lang))||null;
-}
-function speak(word){
- if(!('speechSynthesis' in window)){alert('Trình duyệt này chưa hỗ trợ phát âm. Vui lòng thử Chrome hoặc Edge.');return;}
- const synth=window.speechSynthesis;synth.cancel();
- const utterance=new SpeechSynthesisUtterance(String(word||''));
- utterance.lang='en-US';utterance.rate=0.82;utterance.pitch=1.02;utterance.volume=1;
- const voice=pickEnglishVoice();if(voice)utterance.voice=voice;
- synth.speak(utterance);
-}
+function speak(word){if(!('speechSynthesis'in window)){ alert('Trình duyệt này chưa hỗ trợ phát âm. Vui lòng thử Chrome hoặc Edge.');return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(word);u.lang='en-US';u.rate=.86;const voices=speechSynthesis.getVoices();const v=voices.find(x=>/^en-US/i.test(x.lang))||voices.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;speechSynthesis.speak(u)}
 function start(){currentSet=modeSelect.value==='random'?'all':categorySelect.value;let pool=unique.filter(x=>currentSet==='all'||x.category===currentSet);if(pool.length<4){alert('Chủ đề này chưa đủ từ để tạo câu hỏi.');return}const requested=Number($('questionCount').value)||20;questions=shuffle(pool).slice(0,Math.min(requested,pool.length));resetClock();index=0;score=0;missed=[];responses=Array(questions.length).fill(null);clearTimeout(autoTimer);$('setup').classList.add('hidden');$('result').classList.add('hidden');$('quiz').classList.remove('hidden');render();$('quiz').scrollIntoView({block:'start'})}
 function render(){clearTimeout(autoTimer);const q=questions[index];const saved=responses[index];answered=!!saved;$('back').disabled=index===0;$('progressText').textContent=`Câu ${index+1}/${questions.length}`;$('scoreText').textContent='Đúng: '+score;$('topicText').textContent=currentSet==='all'?'Ngẫu nhiên tất cả chủ đề':currentSet;$('barFill').style.width=(index/questions.length*100)+'%';$('qno').textContent='CÂU '+String(index+1).padStart(2,'0');$('prompt').textContent=q.vi;$('quizPicture').innerHTML=wordImage(q,480);$('hint').textContent='Chọn từ tiếng Anh có nghĩa tương ứng';$('feedback').className='feedback';$('feedback').textContent='Chọn một trong bốn đáp án.';$('next').disabled=true;$('next').textContent=index===questions.length-1?'Xem kết quả':'Câu tiếp theo →';let options=saved?saved.options:shuffle([q,...shuffle(unique.filter(x=>x.en!==q.en)).slice(0,3)]);$('answers').innerHTML='';options.forEach((w,i)=>{const b=document.createElement('button');b.className='answer';b.innerHTML=`<span class="letter">${'ABCD'[i]}</span><span>${w.en}</span>`;if(saved){b.disabled=true;if(w.en===q.en)b.classList.add('correct');if(w.en===saved.answer&&!saved.correct)b.classList.add('wrong')}else{b.onclick=()=>choose(b,w,q,options)}$('answers').appendChild(b)});if(saved){$('feedback').className='feedback '+(saved.correct?'good':'bad');$('feedback').textContent=saved.correct?'✓ Bạn đã trả lời đúng: '+q.en+' — '+q.vi:'✗ Bạn đã chọn '+saved.answer+'. Đáp án đúng: '+q.en+' — '+q.vi;$('next').disabled=false}else{$('feedback').className='feedback';$('feedback').textContent='Chọn một trong bốn đáp án.';$('next').disabled=true}}
 function resetClock(){clearInterval(clockTimer);elapsedSeconds=0;updateClock();clockTimer=setInterval(()=>{elapsedSeconds++;updateClock()},1000)}
@@ -87,6 +75,28 @@ function choose(btn,w,q,options){if(answered)return;answered=true;const buttons=
 function goBack(){if(index<=0)return;clearTimeout(autoTimer);index--;render();}
 function finish(){clearInterval(clockTimer);lastMissed=[...missed];$('quiz').classList.add('hidden');$('result').classList.remove('hidden');$('barFill').style.width='100%';$('finalScore').textContent=score+'/'+questions.length;const pct=Math.round(score/questions.length*100);$('resultTitle').textContent=pct>=90?'Xuất sắc!':pct>=70?'Làm tốt lắm!':'Cố gắng thêm nhé!';$('resultDesc').textContent=`Bạn trả lời đúng ${pct}% số câu. ${missed.length?`Có ${missed.length} câu cần ôn lại.`:'Bạn đã trả lời đúng tất cả!'}`;$('retryWrong').classList.toggle('hidden',missed.length===0);renderStats();renderSessionStats();$('review').innerHTML=missed.length?'<h3>Những từ cần ôn lại</h3><ol>'+missed.map(w=>`<li>${wordImage(w,160)}<b>${w.en}</b> — ${w.vi} <button onclick="window.sayWord(${JSON.stringify(w.en).replace(/"/g,'&quot;')})">Nghe</button></li>`).join('')+'</ol>':'<p>Không có từ sai trong lượt này.</p>'}
 function retryWrong(){if(!lastMissed.length)return;resetClock();questions=shuffle(lastMissed);index=0;score=0;missed=[];responses=Array(questions.length).fill(null);clearTimeout(autoTimer);$('result').classList.add('hidden');$('quiz').classList.remove('hidden');render();$('quiz').scrollIntoView({block:'start'})}
-if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speechSynthesis.addEventListener?.('voiceschanged',()=>window.speechSynthesis.getVoices());}
 window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('homeResult').onclick=goHome;$('back').onclick=goBack;$('next').onclick=()=>{if(index<questions.length-1){index++;render()}else finish()};$('again').onclick=()=>{ $('setup').classList.remove('hidden'); $('result').classList.add('hidden'); $('quiz').classList.add('hidden'); };$('retryWrong').onclick=retryWrong;$('speakAgain').onclick=()=>speak(questions[index].en);$('continueBtn').onclick=()=>{ $('result').classList.add('hidden');$('quiz').classList.add('hidden');$('setup').classList.remove('hidden');renderStats();};$('resetStats').onclick=()=>{if(confirm('Bạn có chắc muốn xóa toàn bộ thống kê học tập?')){saveQueue=saveQueue.then(()=>syncProgress('DELETE')).catch(()=>{$('saveStatus').textContent='Chưa thể đặt lại thống kê. Vui lòng thử lại.'});}};$('questionCount').addEventListener('change',()=>{$('start').textContent='Bắt đầu luyện '+$('questionCount').value+' câu';});renderStats();
-</script><script src="./library.js"></script></body></html>
+</script><script src="/library.js"></script>
+<button class="garden-audio-control" id="gardenAudioToggle" type="button" aria-pressed="false" aria-label="Bật nhạc nền khu vườn">
+  <span class="garden-audio-icon" aria-hidden="true">♫</span>
+  <span><span id="gardenAudioLabel">Bật nhạc khu vườn</span><br><span class="garden-audio-state" id="gardenAudioState">A Rest at the Steamy Inn</span></span>
+</button>
+<audio id="gardenBackgroundMusic" src="/audio/garden-music.mp3" preload="none" loop></audio>
+<script>
+(()=>{
+ const audio=document.getElementById('gardenBackgroundMusic');
+ const button=document.getElementById('gardenAudioToggle');
+ const label=document.getElementById('gardenAudioLabel');
+ const state=document.getElementById('gardenAudioState');
+ if(!audio||!button)return;
+ audio.volume=0.42;
+ button.addEventListener('click',async()=>{
+   if(audio.paused){
+     try{await audio.play();button.setAttribute('aria-pressed','true');button.setAttribute('aria-label','Tắt nhạc nền khu vườn');label.textContent='Tắt nhạc khu vườn';state.textContent='Đang phát nhạc nền';}
+     catch(error){state.textContent='Trình duyệt chưa cho phát — hãy bấm lại';}
+   }else{audio.pause();button.setAttribute('aria-pressed','false');button.setAttribute('aria-label','Bật nhạc nền khu vườn');label.textContent='Bật nhạc khu vườn';state.textContent='A Rest at the Steamy Inn';}
+ });
+ audio.addEventListener('ended',()=>{button.setAttribute('aria-pressed','false');label.textContent='Bật nhạc khu vườn';state.textContent='A Rest at the Steamy Inn';});
+})();
+</script>
+</body></html>
