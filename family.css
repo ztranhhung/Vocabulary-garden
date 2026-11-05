@@ -1,0 +1,6 @@
+/* Family photo and responsive three-column hero — Version 02 only */
+.hero{grid-template-columns:minmax(0,1.1fr) minmax(145px,.58fr) minmax(0,1fr);gap:22px;align-items:center}
+.hero-family{width:100%;max-width:190px;justify-self:center;overflow:hidden;border:5px solid #fffdf6;border-radius:14px;box-shadow:0 12px 30px rgba(50,65,43,.13);transform:rotate(-2deg);background:#fffdf6}
+.hero-family img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+@media(max-width:900px){.hero{grid-template-columns:minmax(0,1.1fr) minmax(145px,.7fr);gap:18px}.hero-family{max-width:165px}.hero-art{grid-column:1/-1;width:min(100%,420px);justify-self:center}}
+@media(max-width:600px){.hero{grid-template-columns:1fr;gap:12px}.hero-family{max-width:180px;margin:8px auto}.hero-art{grid-column:auto}}
