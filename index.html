@@ -108,6 +108,53 @@ if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speech
 window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('homeResult').onclick=goHome;$('back').onclick=goBack;$('next').onclick=()=>{if(index<questions.length-1){index++;render()}else finish()};$('again').onclick=()=>{ $('setup').classList.remove('hidden'); $('result').classList.add('hidden'); $('quiz').classList.add('hidden'); };$('retryWrong').onclick=retryWrong;$('speakAgain').onclick=()=>speak(questions[index].en);$('continueBtn').onclick=()=>{ $('result').classList.add('hidden');$('quiz').classList.add('hidden');$('setup').classList.remove('hidden');renderStats();};$('resetStats').onclick=()=>{if(confirm('Bạn có chắc muốn xóa toàn bộ thống kê học tập?')){saveQueue=saveQueue.then(()=>syncProgress('DELETE')).catch(()=>{$('saveStatus').textContent='Chưa thể đặt lại thống kê. Vui lòng thử lại.'});}};$('questionCount').addEventListener('change',()=>{$('start').textContent='Bắt đầu luyện '+$('questionCount').value+' câu';});renderStats();
 </script><script src="/library.js"></script>
 <script>
+// Đồng bộ ID ảnh từ words.json cho toàn bộ ngân hàng từ vựng.
+(async () => {
+  const startButton = document.getElementById('start');
+  startButton.disabled = true;
+
+  try {
+    const response = await fetch('/words.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Không tải được words.json');
+
+    const records = await response.json();
+    const idMap = new Map(
+      records.map(w => [
+        String(w.en || '').trim().toLowerCase(),
+        Number(w.id)
+      ])
+    );
+
+    let missing = [];
+
+    unique.forEach(w => {
+      const id = idMap.get(w.en.trim().toLowerCase());
+
+      if (Number.isInteger(id)) {
+        w.id = id;
+      } else {
+        missing.push(w.en);
+      }
+    });
+
+    if (missing.length) {
+      console.warn('Các từ chưa có ID trong words.json:', missing);
+    }
+
+    renderLibrary();
+
+    console.log(
+      `Đã đồng bộ ID cho ${unique.length - missing.length}/${unique.length} từ.`
+    );
+
+  } catch (error) {
+    console.error('Lỗi đồng bộ ID ảnh:', error);
+  } finally {
+    startButton.disabled = false;
+  }
+})();
+</script>
+<script>
 // Bổ sung các từ do quản trị viên thêm trong Cloudflare D1.
 // Nếu API tạm thời không khả dụng, 414 từ gốc vẫn hoạt động bình thường.
 (async()=>{
