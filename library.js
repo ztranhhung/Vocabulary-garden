@@ -1,5 +1,9 @@
 saveQueue=syncProgress().catch(()=>{$('saveStatus').textContent='Chưa tải được tiến độ. Bạn vẫn có thể luyện tập.';});
-function wordImage(w,size=320){const id=unique.findIndex(x=>x.en===w.en);const src=w.image_url||`./img/word-${id}.webp`;return `<img src="${src}" alt="Minh họa: ${w.vi}" loading="lazy" width="320" height="320">`}
+function wordImage(w,size=320){
+  const id = Number.isInteger(Number(w.id)) ? Number(w.id) : unique.findIndex(x=>x.en===w.en);
+  const src = w.image_url || `./img/word-${id}.webp`;
+  return `<img src="${src}" alt="Minh họa: ${w.vi}" loading="lazy" width="320" height="320">`;
+}
 let visibleWords=12;
 const libraryCategory=$('libraryCategory');
 categories.forEach(c=>{const option=document.createElement('option');option.value=c;option.textContent=c;libraryCategory.appendChild(option)});
