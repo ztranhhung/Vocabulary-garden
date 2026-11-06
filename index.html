@@ -2,12 +2,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/family.css">
 <style>
 /* Vocabulary Garden 02 — ambient music control */
-.garden-audio-control{position:fixed;right:22px;bottom:20px;z-index:9999;display:flex;align-items:center;gap:10px;padding:11px 16px;border:1px solid rgba(87,128,94,.25);border-radius:999px;background:rgba(255,255,255,.94);color:#315b3b;box-shadow:0 8px 28px rgba(38,75,48,.16);font:600 13px/1.2 inherit;backdrop-filter:blur(10px);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
-.garden-audio-control:hover{transform:translateY(-2px);box-shadow:0 11px 30px rgba(38,75,48,.2)}
-.garden-audio-control:focus-visible{outline:3px solid #83b88c;outline-offset:3px}
+.garden-audio-widget{position:fixed;right:22px;bottom:20px;z-index:9999;display:flex;align-items:center;gap:8px;padding:7px;border:1px solid rgba(87,128,94,.25);border-radius:18px;background:rgba(255,255,255,.95);box-shadow:0 8px 28px rgba(38,75,48,.16);backdrop-filter:blur(10px)}
+.garden-audio-select{max-width:210px;min-width:0;padding:9px 28px 9px 11px;border:1px solid rgba(87,128,94,.2);border-radius:12px;background:#fff;color:#315b3b;font:500 12px inherit;cursor:pointer}
+.garden-audio-control{display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid rgba(87,128,94,.18);border-radius:13px;background:#edf5ed;color:#315b3b;font:600 13px/1.2 inherit;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.garden-audio-control:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(38,75,48,.14)}
+.garden-audio-control:focus-visible,.garden-audio-select:focus-visible{outline:3px solid #83b88c;outline-offset:3px}
 .garden-audio-icon{font-size:18px;line-height:1}
 .garden-audio-state{font-size:11px;font-weight:500;opacity:.72}
-@media(max-width:600px){.garden-audio-control{right:12px;bottom:12px;padding:10px 13px}.garden-audio-state{display:none}}
+@media(max-width:600px){.garden-audio-widget{right:10px;bottom:10px;left:10px;justify-content:space-between;gap:6px;padding:6px}.garden-audio-select{flex:1;max-width:none;font-size:11px;padding:9px 22px 9px 8px}.garden-audio-control{padding:9px 11px}.garden-audio-state{display:none}}
 </style>
 </head><body><header class="site-header"><a class="brand" href="/"><span class="brand-icon">v.</span> vườn từ vựng<span class="brand-dot">•</span></a><nav><a href="#setup">Luyện tập</a><a href="#library">Thư viện từ</a><a href="#progress">Tiến độ</a></nav><span class="header-note">Một chút mỗi ngày, nhớ lâu hơn.</span></header><div class="wrap"><main class="panel">
 <section class="hero"><div class="hero-copy"><div class="eyebrow"><span></span> GÓC HỌC TIẾNG ANH CỦA BẠN</div>
@@ -136,26 +138,71 @@ window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('ho
 })();
 </script>
 
-<button class="garden-audio-control" id="gardenAudioToggle" type="button" aria-pressed="false" aria-label="Bật nhạc nền khu vườn">
-  <span class="garden-audio-icon" aria-hidden="true">♫</span>
-  <span><span id="gardenAudioLabel">Bật nhạc khu vườn</span><br><span class="garden-audio-state" id="gardenAudioState">A Rest at the Steamy Inn</span></span>
-</button>
-<audio id="gardenBackgroundMusic" src="/audio/garden-music.mp3" preload="none" loop></audio>
+<div class="garden-audio-widget" aria-label="Điều khiển nhạc nền">
+  <select class="garden-audio-select" id="gardenAudioSelect" aria-label="Chọn bài nhạc nền">
+    <option value="garden-01.mp3">01 · A Rest at the Steamy Inn</option>
+    <option value="garden-02.mp3">02 · Em Bé Quê – Cover</option>
+    <option value="garden-03.mp3">03 · Bèo Dạt Mây Trôi – Sáo trúc & Piano Chill</option>
+    <option value="garden-04.mp3">04 · 500 Miles – Inside Llewyn Davis</option>
+    <option value="garden-05.mp3">05 · Yesterday Once More – The Carpenters</option>
+    <option value="garden-06.mp3">06 · Chuông Gió Leng Keng – Karaoke</option>
+    <option value="garden-07.mp3">07 · Nhà Em Ở Lưng Đồi – Thuỳ Chi</option>
+    <option value="garden-08.mp3">08 · Em Bé Quê – Karaoke</option>
+  </select>
+  <button class="garden-audio-control" id="gardenAudioToggle" type="button" aria-pressed="false" aria-label="Bật nhạc nền khu vườn">
+    <span class="garden-audio-icon" aria-hidden="true">♫</span>
+    <span><span id="gardenAudioLabel">Bật nhạc</span><br><span class="garden-audio-state" id="gardenAudioState">A Rest at the Steamy Inn</span></span>
+  </button>
+</div>
+<audio id="gardenBackgroundMusic" src="/audio/garden-01.mp3" preload="none" loop></audio>
 <script>
 (()=>{
  const audio=document.getElementById('gardenBackgroundMusic');
  const button=document.getElementById('gardenAudioToggle');
+ const select=document.getElementById('gardenAudioSelect');
  const label=document.getElementById('gardenAudioLabel');
  const state=document.getElementById('gardenAudioState');
- if(!audio||!button)return;
+ if(!audio||!button||!select)return;
+ const tracks={
+  'garden-01.mp3':'A Rest at the Steamy Inn',
+  'garden-02.mp3':'Em Bé Quê – Cover',
+  'garden-03.mp3':'Bèo Dạt Mây Trôi – Sáo trúc & Piano Chill',
+  'garden-04.mp3':'500 Miles – Inside Llewyn Davis',
+  'garden-05.mp3':'Yesterday Once More – The Carpenters',
+  'garden-06.mp3':'Chuông Gió Leng Keng – Karaoke',
+  'garden-07.mp3':'Nhà Em Ở Lưng Đồi – Thuỳ Chi',
+  'garden-08.mp3':'Em Bé Quê – Karaoke'
+ };
  audio.volume=0.42;
- button.addEventListener('click',async()=>{
-   if(audio.paused){
-     try{await audio.play();button.setAttribute('aria-pressed','true');button.setAttribute('aria-label','Tắt nhạc nền khu vườn');label.textContent='Tắt nhạc khu vườn';state.textContent='Đang phát nhạc nền';}
-     catch(error){state.textContent='Trình duyệt chưa cho phát — hãy bấm lại';}
-   }else{audio.pause();button.setAttribute('aria-pressed','false');button.setAttribute('aria-label','Bật nhạc nền khu vườn');label.textContent='Bật nhạc khu vườn';state.textContent='A Rest at the Steamy Inn';}
+ const currentTrack=()=>tracks[select.value]||'Nhạc khu vườn';
+ const updateButton=(playing)=>{
+  button.setAttribute('aria-pressed',String(playing));
+  button.setAttribute('aria-label',playing?'Tắt nhạc nền khu vườn':'Bật nhạc nền khu vườn');
+  label.textContent=playing?'Tắt nhạc':'Bật nhạc';
+  state.textContent=playing?'Đang phát · '+currentTrack():currentTrack();
+ };
+ select.addEventListener('change',async()=>{
+  const wasPlaying=!audio.paused;
+  audio.src='/audio/'+select.value;
+  audio.load();
+  state.textContent='Đã chọn · '+currentTrack();
+  if(wasPlaying){
+   try{await audio.play();updateButton(true);}
+   catch(error){updateButton(false);state.textContent='Chưa phát được — hãy bấm nút nhạc';}
+  }else{updateButton(false);}
  });
- audio.addEventListener('ended',()=>{button.setAttribute('aria-pressed','false');label.textContent='Bật nhạc khu vườn';state.textContent='A Rest at the Steamy Inn';});
+ button.addEventListener('click',async()=>{
+  if(audio.paused){
+   try{await audio.play();updateButton(true);}
+   catch(error){state.textContent='Trình duyệt chưa cho phát — hãy bấm lại';}
+  }else{
+   audio.pause();
+   updateButton(false);
+  }
+ });
+ audio.addEventListener('ended',()=>updateButton(false));
+ audio.addEventListener('pause',()=>{if(!audio.ended)updateButton(false);});
+ audio.addEventListener('play',()=>updateButton(true));
 })();
 </script>
 </body></html>
