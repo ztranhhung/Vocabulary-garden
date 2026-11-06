@@ -94,15 +94,15 @@ function speak(word){
  if(voice)utterance.voice=voice;
  synth.speak(utterance);
 }
-function start(){currentSet=modeSelect.value==='random'?'all':categorySelect.value;let pool=unique.filter(x=>currentSet==='all'||x.category===currentSet);if(pool.length<4){alert('Chủ đề này chưa đủ từ để tạo câu hỏi.');return}const requested=Number($('questionCount').value)||20;questions=shuffle(pool).slice(0,Math.min(requested,pool.length));resetClock();index=0;score=0;missed=[];responses=Array(questions.length).fill(null);clearTimeout(autoTimer);$('setup').classList.add('hidden');$('result').classList.add('hidden');$('quiz').classList.remove('hidden');render();$('quiz').scrollIntoView({block:'start'})}
+function start(){const bgMusic=document.getElementById('gardenBackgroundMusic');if(bgMusic)bgMusic.volume=0.12;currentSet=modeSelect.value==='random'?'all':categorySelect.value;let pool=unique.filter(x=>currentSet==='all'||x.category===currentSet);if(pool.length<4){alert('Chủ đề này chưa đủ từ để tạo câu hỏi.');return}const requested=Number($('questionCount').value)||20;questions=shuffle(pool).slice(0,Math.min(requested,pool.length));resetClock();index=0;score=0;missed=[];responses=Array(questions.length).fill(null);clearTimeout(autoTimer);$('setup').classList.add('hidden');$('result').classList.add('hidden');$('quiz').classList.remove('hidden');render();$('quiz').scrollIntoView({block:'start'})}
 function render(){clearTimeout(autoTimer);const q=questions[index];const saved=responses[index];answered=!!saved;$('back').disabled=index===0;$('progressText').textContent=`Câu ${index+1}/${questions.length}`;$('scoreText').textContent='Đúng: '+score;$('topicText').textContent=currentSet==='all'?'Ngẫu nhiên tất cả chủ đề':currentSet;$('barFill').style.width=(index/questions.length*100)+'%';$('qno').textContent='CÂU '+String(index+1).padStart(2,'0');$('prompt').textContent=q.vi;$('quizPicture').innerHTML=wordImage(q,480);$('hint').textContent='Chọn từ tiếng Anh có nghĩa tương ứng';$('feedback').className='feedback';$('feedback').textContent='Chọn một trong bốn đáp án.';$('next').disabled=true;$('next').textContent=index===questions.length-1?'Xem kết quả':'Câu tiếp theo →';let options=saved?saved.options:shuffle([q,...shuffle(unique.filter(x=>x.en!==q.en)).slice(0,3)]);$('answers').innerHTML='';options.forEach((w,i)=>{const b=document.createElement('button');b.className='answer';b.innerHTML=`<span class="letter">${'ABCD'[i]}</span><span>${w.en}</span>`;if(saved){b.disabled=true;if(w.en===q.en)b.classList.add('correct');if(w.en===saved.answer&&!saved.correct)b.classList.add('wrong')}else{b.onclick=()=>choose(b,w,q,options)}$('answers').appendChild(b)});if(saved){$('feedback').className='feedback '+(saved.correct?'good':'bad');$('feedback').textContent=saved.correct?'✓ Bạn đã trả lời đúng: '+q.en+' — '+q.vi:'✗ Bạn đã chọn '+saved.answer+'. Đáp án đúng: '+q.en+' — '+q.vi;$('next').disabled=false}else{$('feedback').className='feedback';$('feedback').textContent='Chọn một trong bốn đáp án.';$('next').disabled=true}}
 function resetClock(){clearInterval(clockTimer);elapsedSeconds=0;updateClock();clockTimer=setInterval(()=>{elapsedSeconds++;updateClock()},1000)}
 function updateClock(){const m=String(Math.floor(elapsedSeconds/60)).padStart(2,'0');const sec=String(elapsedSeconds%60).padStart(2,'0');$('timerText').textContent=' '+m+':'+sec}
-function goHome(){clearTimeout(autoTimer);clearInterval(clockTimer);window.speechSynthesis?.cancel();$('quiz').classList.add('hidden');$('result').classList.add('hidden');$('setup').classList.remove('hidden')}
+function goHome(){const bgMusic=document.getElementById('gardenBackgroundMusic');if(bgMusic)bgMusic.volume=0.42;clearTimeout(autoTimer);clearInterval(clockTimer);window.speechSynthesis?.cancel();$('quiz').classList.add('hidden');$('result').classList.add('hidden');$('setup').classList.remove('hidden')}
 function advance(){if(index<questions.length-1){index++;render()}else finish()}
 function choose(btn,w,q,options){if(answered)return;answered=true;const buttons=[...$('answers').children];buttons.forEach(b=>b.disabled=true);const correct=w.en===q.en;responses[index]={answer:w.en,correct,options};saveWordProgress(q,correct);if(correct){score++;btn.classList.add('correct');$('feedback').className='feedback good';$('feedback').textContent='✓ Chính xác! '+q.en+' — '+q.vi;$('next').disabled=false;}else{missed.push(q);btn.classList.add('wrong');const right=buttons[options.findIndex(o=>o.en===q.en)];if(right)right.classList.add('correct');$('feedback').className='feedback bad';$('feedback').textContent='✗ Chưa đúng. Đáp án là: '+q.en+' — '+q.vi+'. Hãy bấm Câu tiếp theo khi đã nhớ.';$('next').disabled=false;} $('scoreText').textContent='Đúng: '+score;speak(q.en)}
 function goBack(){if(index<=0)return;clearTimeout(autoTimer);index--;render();}
-function finish(){clearInterval(clockTimer);lastMissed=[...missed];$('quiz').classList.add('hidden');$('result').classList.remove('hidden');$('barFill').style.width='100%';$('finalScore').textContent=score+'/'+questions.length;const pct=Math.round(score/questions.length*100);$('resultTitle').textContent=pct>=90?'Xuất sắc!':pct>=70?'Làm tốt lắm!':'Cố gắng thêm nhé!';$('resultDesc').textContent=`Bạn trả lời đúng ${pct}% số câu. ${missed.length?`Có ${missed.length} câu cần ôn lại.`:'Bạn đã trả lời đúng tất cả!'}`;$('retryWrong').classList.toggle('hidden',missed.length===0);renderStats();renderSessionStats();$('review').innerHTML=missed.length?'<h3>Những từ cần ôn lại</h3><ol>'+missed.map(w=>`<li>${wordImage(w,160)}<b>${w.en}</b> — ${w.vi} <button onclick="window.sayWord(${JSON.stringify(w.en).replace(/"/g,'&quot;')})">Nghe</button></li>`).join('')+'</ol>':'<p>Không có từ sai trong lượt này.</p>'}
+function finish(){const bgMusic=document.getElementById('gardenBackgroundMusic');if(bgMusic)bgMusic.volume=0.42;clearInterval(clockTimer);lastMissed=[...missed];$('quiz').classList.add('hidden');$('result').classList.remove('hidden');$('barFill').style.width='100%';$('finalScore').textContent=score+'/'+questions.length;const pct=Math.round(score/questions.length*100);$('resultTitle').textContent=pct>=90?'Xuất sắc!':pct>=70?'Làm tốt lắm!':'Cố gắng thêm nhé!';$('resultDesc').textContent=`Bạn trả lời đúng ${pct}% số câu. ${missed.length?`Có ${missed.length} câu cần ôn lại.`:'Bạn đã trả lời đúng tất cả!'}`;$('retryWrong').classList.toggle('hidden',missed.length===0);renderStats();renderSessionStats();$('review').innerHTML=missed.length?'<h3>Những từ cần ôn lại</h3><ol>'+missed.map(w=>`<li>${wordImage(w,160)}<b>${w.en}</b> — ${w.vi} <button onclick="window.sayWord(${JSON.stringify(w.en).replace(/"/g,'&quot;')})">Nghe</button></li>`).join('')+'</ol>':'<p>Không có từ sai trong lượt này.</p>'}
 function retryWrong(){if(!lastMissed.length)return;resetClock();questions=shuffle(lastMissed);index=0;score=0;missed=[];responses=Array(questions.length).fill(null);clearTimeout(autoTimer);$('result').classList.add('hidden');$('quiz').classList.remove('hidden');render();$('quiz').scrollIntoView({block:'start'})}
 if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speechSynthesis.addEventListener?.('voiceschanged',()=>window.speechSynthesis.getVoices());}
 window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('homeResult').onclick=goHome;$('back').onclick=goBack;$('next').onclick=()=>{if(index<questions.length-1){index++;render()}else finish()};$('again').onclick=()=>{ $('setup').classList.remove('hidden'); $('result').classList.add('hidden'); $('quiz').classList.add('hidden'); };$('retryWrong').onclick=retryWrong;$('speakAgain').onclick=()=>speak(questions[index].en);$('continueBtn').onclick=()=>{ $('result').classList.add('hidden');$('quiz').classList.add('hidden');$('setup').classList.remove('hidden');renderStats();};$('resetStats').onclick=()=>{if(confirm('Bạn có chắc muốn xóa toàn bộ thống kê học tập?')){saveQueue=saveQueue.then(()=>syncProgress('DELETE')).catch(()=>{$('saveStatus').textContent='Chưa thể đặt lại thống kê. Vui lòng thử lại.'});}};$('questionCount').addEventListener('change',()=>{$('start').textContent='Bắt đầu luyện '+$('questionCount').value+' câu';});renderStats();
@@ -140,7 +140,7 @@ window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('ho
 
 <div class="garden-audio-widget" aria-label="Điều khiển nhạc nền">
   <select class="garden-audio-select" id="gardenAudioSelect" aria-label="Chọn bài nhạc nền">
-    <option value="garden-01.mp3">01 · A Rest at the Steamy Inn</option>
+    <option value="garden-01.mp3">01 · A Rest at the Steamy</option>
     <option value="garden-02.mp3">02 · Mẹ yêu con</option>
     <option value="garden-03.mp3">03 · Bèo Dạt Mây Trôi</option>
     <option value="garden-04.mp3">04 · Cò lả</option>
@@ -154,7 +154,7 @@ window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('ho
     <span><span id="gardenAudioLabel">Bật nhạc</span><br><span class="garden-audio-state" id="gardenAudioState">A Rest at the Steamy Inn</span></span>
   </button>
 </div>
-<audio id="gardenBackgroundMusic" src="/audio/garden-01.mp3" preload="none" loop></audio>
+<audio id="gardenBackgroundMusic" src="/audio/garden-01.mp3" preload="none"></audio>
 <script>
 (()=>{
  const audio=document.getElementById('gardenBackgroundMusic');
@@ -164,14 +164,14 @@ window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('ho
  const state=document.getElementById('gardenAudioState');
  if(!audio||!button||!select)return;
  const tracks={
-  'garden-01.mp3':'A Rest at the Steamy Inn',
-  'garden-02.mp3':'Em Bé Quê – Cover',
-  'garden-03.mp3':'Bèo Dạt Mây Trôi – Sáo trúc & Piano Chill',
-  'garden-04.mp3':'500 Miles – Inside Llewyn Davis',
-  'garden-05.mp3':'Yesterday Once More – The Carpenters',
-  'garden-06.mp3':'Chuông Gió Leng Keng – Karaoke',
-  'garden-07.mp3':'Nhà Em Ở Lưng Đồi – Thuỳ Chi',
-  'garden-08.mp3':'Em Bé Quê – Karaoke'
+  'garden-01.mp3':'A Rest at the Steamy',
+  'garden-02.mp3':'Mẹ yêu con',
+  'garden-03.mp3':'Bèo Dạt Mây Trôi',
+  'garden-04.mp3':'Cò lả',
+  'garden-05.mp3':'Trống cơm',
+  'garden-06.mp3':'Chuông Gió Leng Keng',
+  'garden-07.mp3':'Nhà em ở lưng đồi',
+  'garden-08.mp3':'Em Bé Quê'
  };
  audio.volume=0.42;
  const currentTrack=()=>tracks[select.value]||'Nhạc khu vườn';
@@ -200,7 +200,15 @@ window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('ho
    updateButton(false);
   }
  });
- audio.addEventListener('ended',()=>updateButton(false));
+ audio.addEventListener('ended',async()=>{
+  const nextIndex=(select.selectedIndex+1)%select.options.length;
+  select.selectedIndex=nextIndex;
+  audio.src='/audio/'+select.value;
+  audio.load();
+  state.textContent='Đang chuyển bài · '+currentTrack();
+  try{await audio.play();updateButton(true);}
+  catch(error){updateButton(false);state.textContent='Đã chuyển bài · '+currentTrack()+' — bấm để phát';}
+ });
  audio.addEventListener('pause',()=>{if(!audio.ended)updateButton(false);});
  audio.addEventListener('play',()=>updateButton(true));
 })();
