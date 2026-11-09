@@ -235,7 +235,19 @@ function resetClock(){clearInterval(clockTimer);elapsedSeconds=0;updateClock();c
 function updateClock(){const m=String(Math.floor(elapsedSeconds/60)).padStart(2,'0');const sec=String(elapsedSeconds%60).padStart(2,'0');$('timerText').textContent=' '+m+':'+sec}
 function goHome(){const bgMusic=document.getElementById('gardenBackgroundMusic');if(bgMusic)bgMusic.volume=0.42;clearTimeout(autoTimer);clearInterval(clockTimer);window.speechSynthesis?.cancel();$('quiz').classList.add('hidden');$('result').classList.add('hidden');$('setup').classList.remove('hidden')}
 function advance(){if(index<questions.length-1){index++;render()}else finish()}
-function choose(btn,w,q,options){if(answered)return;answered=true;const buttons=[...$('answers').children];buttons.forEach(b=>b.disabled=true);const correct=w.en===q.en;responses[index]={answer:w.en,correct,options};saveWordProgress(q,correct);if(correct){score++;btn.classList.add('correct');$('feedback').className='feedback good';$('feedback').textContent='✓ Chính xác! '+q.en+' — '+q.vi;$('next').disabled=false;}else{missed.push(q);btn.classList.add('wrong');const right=buttons[options.findIndex(o=>o.en===q.en)];if(right)right.classList.add('correct');$('feedback').className='feedback bad';$('feedback').textContent='✗ Chưa đúng. Đáp án là: '+q.en+' — '+q.vi+'. Hãy bấm Câu tiếp theo khi đã nhớ.';$('next').disabled=false;} $('scoreText').textContent='Đúng: '+score;speak(q.en)}
+function choose(btn,w,q,options,field='en'){
+ if(answered)return;
+ answered=true;
+ const buttons=[...$('answers').children];buttons.forEach(b=>b.disabled=true);
+ const correct=w.en===q.en;
+ responses[index]={answer:w.en,correct,options};
+ saveWordProgress(q,correct);
+ if(correct){score++;btn.classList.add('correct');$('feedback').className='feedback good';$('feedback').textContent='✓ Chính xác! '+q.en+' — '+q.vi;}
+ else{missed.push(q);btn.classList.add('wrong');const right=buttons[options.findIndex(o=>o.en===q.en)];if(right)right.classList.add('correct');$('feedback').className='feedback bad';$('feedback').textContent='✗ Chưa đúng. Đáp án là: '+q.en+' — '+q.vi+'. Hãy bấm Câu tiếp theo khi đã nhớ.';}
+ $('scoreText').textContent='Đúng: '+score;$('next').disabled=false;
+ if(practiceType==='listen')$('quizPicture').innerHTML=wordImage(q,480);
+ else speak(q.en);
+}
 function goBack(){if(index<=0)return;clearTimeout(autoTimer);index=Math.max(0,index-(practiceType==='match'?5:1));render();}
 function finish(){const bgMusic=document.getElementById('gardenBackgroundMusic');if(bgMusic)bgMusic.volume=0.42;clearInterval(clockTimer);lastMissed=[...missed];$('quiz').classList.add('hidden');$('result').classList.remove('hidden');$('barFill').style.width='100%';$('finalScore').textContent=score+'/'+questions.length;const pct=Math.round(score/questions.length*100);$('resultTitle').textContent=pct>=90?'Xuất sắc!':pct>=70?'Làm tốt lắm!':'Cố gắng thêm nhé!';$('resultDesc').textContent=`Bạn trả lời đúng ${pct}% số câu. ${missed.length?`Có ${missed.length} câu cần ôn lại.`:'Bạn đã trả lời đúng tất cả!'}`;$('retryWrong').classList.toggle('hidden',missed.length===0);renderStats();renderSessionStats();$('review').innerHTML=missed.length?'<h3>Những từ cần ôn lại</h3><ol>'+missed.map(w=>`<li>${wordImage(w,160)}<b>${w.en}</b> — ${w.vi} <button onclick="window.sayWord(${JSON.stringify(w.en).replace(/"/g,'&quot;')})">Nghe</button></li>`).join('')+'</ol>':'<p>Không có từ sai trong lượt này.</p>'}
 function retryWrong(){if(!lastMissed.length)return;resetClock();questions=shuffle(lastMissed);index=0;score=0;missed=[];responses=Array(questions.length).fill(null);clearTimeout(autoTimer);$('result').classList.add('hidden');$('quiz').classList.remove('hidden');render();$('quiz').scrollIntoView({block:'start'})}
