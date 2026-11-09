@@ -195,7 +195,7 @@ function renderMatchRound(){
  $('prompt').textContent='Ghép các từ tiếng Anh với nghĩa tiếng Việt tương ứng';
  $('hint').textContent='Chọn một thẻ tiếng Anh, sau đó chọn thẻ tiếng Việt phù hợp';
  $('quizPicture').innerHTML='';
- matchState={selected:null,matched:new Set(),wrong:null};
+ matchState={selected:null,matched:new Set(),wrong:null,replayWords:shuffle(group.slice()),replayIndex:0};
  const enCards=shuffle(group.map((w,i)=>({w,i,side:'en'})));
  const viCards=shuffle(group.map((w,i)=>({w,i,side:'vi'})));
  const grid=document.createElement('div');grid.className='match-grid';grid.id='matchGrid';
@@ -252,7 +252,19 @@ function goBack(){if(index<=0)return;clearTimeout(autoTimer);index=Math.max(0,in
 function finish(){const bgMusic=document.getElementById('gardenBackgroundMusic');if(bgMusic)bgMusic.volume=0.42;clearInterval(clockTimer);lastMissed=[...missed];$('quiz').classList.add('hidden');$('result').classList.remove('hidden');$('barFill').style.width='100%';$('finalScore').textContent=score+'/'+questions.length;const pct=Math.round(score/questions.length*100);$('resultTitle').textContent=pct>=90?'Xuất sắc!':pct>=70?'Làm tốt lắm!':'Cố gắng thêm nhé!';$('resultDesc').textContent=`Bạn trả lời đúng ${pct}% số câu. ${missed.length?`Có ${missed.length} câu cần ôn lại.`:'Bạn đã trả lời đúng tất cả!'}`;$('retryWrong').classList.toggle('hidden',missed.length===0);renderStats();renderSessionStats();$('review').innerHTML=missed.length?'<h3>Những từ cần ôn lại</h3><ol>'+missed.map(w=>`<li>${wordImage(w,160)}<b>${w.en}</b> — ${w.vi} <button onclick="window.sayWord(${JSON.stringify(w.en).replace(/"/g,'&quot;')})">Nghe</button></li>`).join('')+'</ol>':'<p>Không có từ sai trong lượt này.</p>'}
 function retryWrong(){if(!lastMissed.length)return;resetClock();questions=shuffle(lastMissed);index=0;score=0;missed=[];responses=Array(questions.length).fill(null);clearTimeout(autoTimer);$('result').classList.add('hidden');$('quiz').classList.remove('hidden');render();$('quiz').scrollIntoView({block:'start'})}
 if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speechSynthesis.addEventListener?.('voiceschanged',()=>window.speechSynthesis.getVoices());}
-window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('homeResult').onclick=goHome;$('back').onclick=goBack;$('next').onclick=()=>{if(practiceType==='match'){index=Math.min(index+5,questions.length);}else if(index<questions.length-1){index++;}else{finish();return;}if(index>=questions.length)finish();else render()};$('again').onclick=()=>{ $('setup').classList.remove('hidden'); $('result').classList.add('hidden'); $('quiz').classList.add('hidden'); };$('retryWrong').onclick=retryWrong;$('speakAgain').onclick=()=>speak(questions[index].en);$('continueBtn').onclick=()=>{ $('result').classList.add('hidden');$('quiz').classList.add('hidden');$('setup').classList.remove('hidden');renderStats();};$('resetStats').onclick=()=>{if(confirm('Bạn có chắc muốn xóa toàn bộ thống kê học tập?')){saveQueue=saveQueue.then(()=>syncProgress('DELETE')).catch(()=>{$('saveStatus').textContent='Chưa thể đặt lại thống kê. Vui lòng thử lại.'});}};$('questionCount').addEventListener('change',()=>{$('start').textContent='Bắt đầu luyện '+$('questionCount').value+' câu';});renderStats();
+window.sayWord=speak;$('start').onclick=start;$('homeQuiz').onclick=goHome;$('homeResult').onclick=goHome;$('back').onclick=goBack;$('next').onclick=()=>{if(practiceType==='match'){index=Math.min(index+5,questions.length);}else if(index<questions.length-1){index++;}else{finish();return;}if(index>=questions.length)finish();else render()};$('again').onclick=()=>{ $('setup').classList.remove('hidden'); $('result').classList.add('hidden'); $('quiz').classList.add('hidden'); };$('retryWrong').onclick=retryWrong;$('speakAgain').onclick=()=>{
+ if(practiceType==='match'){
+  if(!matchState.replayWords||!matchState.replayWords.length)return;
+  if(matchState.replayIndex>=matchState.replayWords.length){
+   matchState.replayWords=shuffle(questions.slice(index,Math.min(index+5,questions.length)));
+   matchState.replayIndex=0;
+  }
+  const word=matchState.replayWords[matchState.replayIndex++];
+  if(word)speak(word.en);
+ }else{
+  speak(questions[index].en);
+ }
+};$('continueBtn').onclick=()=>{ $('result').classList.add('hidden');$('quiz').classList.add('hidden');$('setup').classList.remove('hidden');renderStats();};$('resetStats').onclick=()=>{if(confirm('Bạn có chắc muốn xóa toàn bộ thống kê học tập?')){saveQueue=saveQueue.then(()=>syncProgress('DELETE')).catch(()=>{$('saveStatus').textContent='Chưa thể đặt lại thống kê. Vui lòng thử lại.'});}};$('questionCount').addEventListener('change',()=>{$('start').textContent='Bắt đầu luyện '+$('questionCount').value+' câu';});renderStats();
 </script><script src="/library.js"></script>
 <script>
 // Đồng bộ ID ảnh từ words.json cho toàn bộ ngân hàng từ vựng.
