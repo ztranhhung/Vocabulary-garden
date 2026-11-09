@@ -209,6 +209,8 @@ function renderMatchRound(){
 }
 function selectMatchCard(btn,item,total){
  if(btn.disabled||matchState.matched.has(item.w.en))return;
+ // Chỉ phát âm khi người học chạm vào thẻ tiếng Anh.
+ if(item.side==='en')speak(item.w.en);
  if(!matchState.selected){matchState.selected={btn,item};btn.classList.add('selected');return;}
  const first=matchState.selected;
  if(first.item.side===item.side){first.btn.classList.remove('selected');first.btn.classList.add('mismatch');setTimeout(()=>first.btn.classList.remove('mismatch'),450);matchState.selected={btn,item};btn.classList.add('selected');return;}
